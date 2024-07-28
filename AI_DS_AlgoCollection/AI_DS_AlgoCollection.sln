@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI_DS_AlgoCollection", "AI_DS_AlgoCollection\AI_DS_AlgoCollection.csproj", "{10C4EB6B-422A-4B8D-A66D-8A905C4504F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{10C4EB6B-422A-4B8D-A66D-8A905C4504F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10C4EB6B-422A-4B8D-A66D-8A905C4504F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10C4EB6B-422A-4B8D-A66D-8A905C4504F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10C4EB6B-422A-4B8D-A66D-8A905C4504F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,15 @@
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.csproj.AssemblyReference.cache
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.AssemblyInfoInputs.cache
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.AssemblyInfo.cs
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.csproj.CoreCompileInputs.cache
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/bin/Debug/net7.0/AI_DS_AlgoCollection
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/bin/Debug/net7.0/AI_DS_AlgoCollection.deps.json
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/bin/Debug/net7.0/AI_DS_AlgoCollection.runtimeconfig.json
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/bin/Debug/net7.0/AI_DS_AlgoCollection.dll
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/bin/Debug/net7.0/AI_DS_AlgoCollection.pdb
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.dll
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/refint/AI_DS_AlgoCollection.dll
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.pdb
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.genruntimeconfig.cache
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/ref/AI_DS_AlgoCollection.dll
