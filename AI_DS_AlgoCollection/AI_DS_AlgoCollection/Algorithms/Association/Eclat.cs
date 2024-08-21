@@ -10,7 +10,7 @@ public static class Eclat {
         var numItems = transactions.AppearingItems().Count();
         var result = EclatAlgo(transactions, (int) (minSupp * numItems));
         
-        string s= result.Aggregate("Eclat: ", (current, itemSet) => current + (itemSet + " : " + transactions.Num(itemSet) + ", "));
+        string s = result.Aggregate("Eclat: ", (current, itemSet) => current + (itemSet + " : " + transactions.Num(itemSet) + ", "));
         Console.WriteLine(s);
     }
 

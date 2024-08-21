@@ -32,31 +32,31 @@ public class AssociationRule<TItem> where TItem : IComparable{
     }
 }
 
-public static class AprioriAlgo<TItem> where TItem : IComparable {
-    private readonly ItemSet<TItem> _itemBase;
-    private readonly List<ItemSet<TItem>> _transactions;
-    readonly float _minsupp;
-    readonly float _minconf;
+public static class AprioriAlgo {
+    public static void DoApriori<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, float minsupp = 0.5f) where TDataType : IComparable
+    {
+       var outcome = Apriori(data.GetItemSets(), minsupp);
 
-    public static AprioriAlgo(List<ItemSet<TItem> > Transactions, float minsupp, float minconf) {
-        _itemBase = new ItemSet<TItem>(Transactions.AppearingItems().ToArray());
-        _transactions = Transactions;
-        _minconf = minconf;
-        _minsupp = minsupp;
+       foreach (var itemSets in outcome)
+       {
+           itemSets.Aggregate("Apriori: ", (current, itemSet) => current + itemSet + " , ");
+       }
     }
 
-    private static List<ItemSet<TItem> > GetMostFrequentSubsetsWithOneItem(float minsupp) {
+    private static List<ItemSet<TItem>> GetMostFrequentSubsetsWithOneItem<TItem>(List<ItemSet<TItem>> transactions, float minsupp) where TItem : IComparable
+    {
         var itemSet = new List<ItemSet<TItem> >();
-        foreach (var item in _itemBase.ItemList) {
+        foreach (var item in transactions.AppearingItems()) {
             var singular = new ItemSet<TItem> (item);
-            if (_transactions.Support(singular) >= minsupp) itemSet.Add(singular);
+            if (transactions.Support(singular) >= minsupp) itemSet.Add(singular);
         }
         return itemSet;
     }
 
-    public static List<List<ItemSet<TItem> >> Apriori(List<ItemSet<TItem>> Transactions) {
-        var L = new List<List<ItemSet<TItem> >>();
-        L.Add(GetMostFrequentSubsetsWithOneItem(_minsupp));
+    private static List<List<ItemSet<TItem>>> Apriori<TItem>(List<ItemSet<TItem>> transactions, float minsupp) where TItem : IComparable
+    {
+        var L = new List<List<ItemSet<TItem>>>();
+        L.Add(GetMostFrequentSubsetsWithOneItem(transactions, minsupp));
 
         var k = 2;
         while (L[k - 2].Count > 0) {
@@ -71,10 +71,10 @@ public static class AprioriAlgo<TItem> where TItem : IComparable {
             Dictionary<ItemSet<TItem> , int> counter = new Dictionary<ItemSet<TItem> , int>();
 
             //Step 2, messure how often a candidate i in transactions
-            for (var i = 0; i < Transactions.Count; i++) {
+            for (var i = 0; i < transactions.Count; i++) {
                 for (var j = 0; j < candidates.Count; j++) {
                     if (!counter.ContainsKey(candidates[j])) counter.Add(candidates[j], 0);
-                    if (Transactions[i].Contains(candidates[j])) { counter[candidates[j]]++; }
+                    if (transactions[i].Contains(candidates[j])) { counter[candidates[j]]++; }
                 }
             }
 
@@ -82,7 +82,7 @@ public static class AprioriAlgo<TItem> where TItem : IComparable {
             List<ItemSet<TItem> > Lk = new List<ItemSet<TItem> >();
             for (var i = 0; i < candidates.Count; i++) {
                 var count = (float)counter[candidates[i]];
-                var dms = ((float)Transactions.Count * _minsupp);
+                var dms = ((float)transactions.Count * minsupp);
                 if (count >= dms) Lk.Add(candidates[i]);
             }
 
@@ -103,7 +103,8 @@ public static class AprioriAlgo<TItem> where TItem : IComparable {
         return L;
     }
 
-    public static List<ItemSet<TItem> > AprioriGen(List<ItemSet<TItem> > L, int preLenght) {
+    private static List<ItemSet<TItem> > AprioriGen<TItem>(List<ItemSet<TItem> > L, int preLenght) where TItem : IComparable
+    {
         var newCandidates = new List<ItemSet<TItem> >();
 
         //need to be sorted ?
@@ -141,7 +142,8 @@ public static class AprioriAlgo<TItem> where TItem : IComparable {
         return newCandidates;
     }
 
-    private bool LcontainsAnyOfSubset(List<ItemSet<TItem> > L, ItemSet<TItem>  candidate, int length) {
+    private static bool LcontainsAnyOfSubset<TItem>(List<ItemSet<TItem> > L, ItemSet<TItem>  candidate, int length) where TItem : IComparable
+    {
         var sub = candidate.GetPossibleSubsets(length);
         var contains = false;
         for (var k = 0; k < L.Count; k++) {
@@ -153,58 +155,63 @@ public static class AprioriAlgo<TItem> where TItem : IComparable {
         return contains;
     }
 
-    public List<(AssociationRule<TItem>, float)> GetRulesWithConfidence() {
-        var L = Apriori(this._transactions);
-        var extractedRules = ExtractRules(L);
+    public static List<(AssociationRule<TItem>, float)> GetRulesWithConfidence<TItem>(List<ItemSet<TItem>> transactions, float minsupp) where TItem : IComparable
+    {
+        var L = Apriori(transactions, minsupp);
+        var extractedRules = ExtractRules(L, transactions, minsupp);
         var rulesWithConfidence = new List<(AssociationRule<TItem>, float)>();
 
         for (var i = 0; i < extractedRules.Count; i++) {
-            rulesWithConfidence.Add(new(extractedRules[i], _transactions.Confidence(extractedRules[i])));
+            rulesWithConfidence.Add(new(extractedRules[i], transactions.Confidence(extractedRules[i])));
         }
 
         return rulesWithConfidence;
     }
 
-    private List<AssociationRule<TItem>> ExtractRules(List<List<ItemSet<TItem> >> L) {
+    private static List<AssociationRule<TItem>> ExtractRules<TItem>(List<List<ItemSet<TItem> >> L, List<ItemSet<TItem>> transactions, float minconf) where TItem : IComparable
+    {
         var allCurrentRules = new List<AssociationRule<TItem>>();
         List<ItemSet<TItem>> currentH = default;
 
         for (int n = 0; n < L[1].Count; n++) {
             currentH = L[1][n].GetPossibleSubsets(1);
             allCurrentRules.AddRange(GetAllRules(L[1][n], currentH));
-            RemoveConclusionAndRulesNotMatchingConf(allCurrentRules, currentH);
+            RemoveConclusionAndRulesNotMatchingConf(allCurrentRules, currentH, transactions, minconf);
         }
 
         for (int n = 0; n < L[2].Count; n++) {
             currentH = L[2][n].GetPossibleSubsets(1); //warum 1 ?
             allCurrentRules.AddRange(GetAllRules(L[2][n], currentH));
-            RemoveConclusionAndRulesNotMatchingConf(allCurrentRules, currentH);
-            RecursiveExtraction(n, 2, L, currentH, allCurrentRules);
+            RemoveConclusionAndRulesNotMatchingConf(allCurrentRules, currentH, transactions, minconf);
+            RecursiveExtraction(n, 2, L, currentH, allCurrentRules, transactions, minconf);
         }
 
         return allCurrentRules;
     }
 
-    private void RecursiveExtraction(int n, int m, List<List<ItemSet<TItem> >> L, List<ItemSet<TItem> > currentH, List<AssociationRule<TItem>> allCurrentRules) {
+    private static void RecursiveExtraction<TItem>(int n, int m, List<List<ItemSet<TItem> >> L, List<ItemSet<TItem> > currentH, List<AssociationRule<TItem>> allCurrentRules, List<ItemSet<TItem>> transactions, float minconf) where TItem : IComparable
+    {
         if (m >= L.Count) return;
         if (L[m].Count == 0) return; //leer ?
         currentH = AprioriGen(currentH, m - 1);
         allCurrentRules.AddRange(GetAllRules(L[m][n], currentH));
-        RemoveConclusionAndRulesNotMatchingConf(allCurrentRules, currentH);
-        for (int i = 0; i < L[m].Count; i++) { RecursiveExtraction(i, m + 1, L, currentH, allCurrentRules); }
+        RemoveConclusionAndRulesNotMatchingConf(allCurrentRules, currentH,transactions,minconf);
+        for (int i = 0; i < L[m].Count; i++) { RecursiveExtraction(i, m + 1, L, currentH, allCurrentRules, transactions, minconf); }
     }
 
-    private void RemoveConclusionAndRulesNotMatchingConf(List<AssociationRule<TItem>> currentRules, List<ItemSet<TItem> > currentH) {
+    private static void RemoveConclusionAndRulesNotMatchingConf<TItem>(List<AssociationRule<TItem>> currentRules, List<ItemSet<TItem> > currentH, List<ItemSet<TItem>> transactions, float minconf) where TItem : IComparable
+    {
         for (int i = currentRules.Count - 1; i >= 0; i--) {
-            float conf = _transactions.Confidence(currentRules[i]);
-            if (conf < _minconf) {
+            float conf = transactions.Confidence(currentRules[i]);
+            if (conf < minconf) {
                 currentH.Remove(currentRules[i].GetY());
                 currentRules.RemoveAt(i);
             }
         }
     }
 
-    private List<AssociationRule<TItem>> GetAllRules(ItemSet<TItem>  set, List<ItemSet<TItem> > Hm) {
+    private static List<AssociationRule<TItem>> GetAllRules<TItem>(ItemSet<TItem>  set, List<ItemSet<TItem> > Hm) where TItem : IComparable
+    {
         int len = set.ItemList.Count;
         var X = set.GetPossibleSubsets(len);
         var rules = new List<AssociationRule<TItem>>();

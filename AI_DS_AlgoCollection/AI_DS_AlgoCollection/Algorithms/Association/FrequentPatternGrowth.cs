@@ -112,8 +112,8 @@ public static class FrequentPatternGrowth {
         return tree;
     }
 
-    private static List<ItemSet<TItem>> Growth<TItem>(FPTree<TItem> tree, ItemSet<TItem> itemSet, int anzMin, List<ItemSet<TItem>> transactions, List<ItemSet<TItem>> output = null) where TItem : IComparable {
-        output ??= new List<ItemSet<TItem>>();
+    private static List<ItemSet<TItem>> Growth<TItem>(FPTree<TItem> tree, ItemSet<TItem> itemSet, int anzMin, List<ItemSet<TItem>> transactions) where TItem : IComparable {
+        var returnOutcome = new List<ItemSet<TItem>>();
         
         if (tree.HasOnlyOnePath(out var path)) {
             var asItems = path.Where(n => n.ItemCount >= anzMin).Select(n => n.Item).ToList();
@@ -122,11 +122,11 @@ public static class FrequentPatternGrowth {
                 if (set.ItemList.Count > 0)
                 {
                     set.ItemList.AddRange(itemSet.ItemList);
-                    output.Add(set);
+                    returnOutcome.Add(set);
                 }
             }
             
-            Console.WriteLine(asItems.Aggregate($"One Path, ({output}): ", (a, b) => $"{a}, {b}"));
+            //Console.WriteLine(asItems.Aggregate($"One Path, ({returnOutcome}): ", (a, b) => $"{a}, {b}"));
         }
         else {
             var sideArrayKeys = tree.SideArray.Keys.ToList();
@@ -138,28 +138,25 @@ public static class FrequentPatternGrowth {
                 itemSetCopy.ItemList.Add(node.Item);
 
                 if (itemSetCopy.ItemList.Count > 1 && node.ItemCount >= anzMin) {
-                    output.Add(itemSetCopy);
+                    returnOutcome.Add(itemSetCopy);
                 }
 
                 var condPatternBase = ConditionalPatternBase(itemSetCopy, transactions);
                 var reducedTree = BuildTree(condPatternBase, anzMin);
 
-                Console.WriteLine(condPatternBase.Aggregate($"R({itemSetCopy}): ", (a, b) => $"{a}, {b}"));
-                Console.WriteLine(reducedTree);
+                //Console.WriteLine(condPatternBase.Aggregate($"R({itemSetCopy}): ", (a, b) => $"{a}, {b}"));
+                //Console.WriteLine(reducedTree);
 
                 if (reducedTree.IsEmpty()) {
-                    //Console.WriteLine("empty");
                     continue;
                 }
                 
-                var growthSets = Growth(reducedTree, itemSetCopy, anzMin, transactions, output);
-                Console.WriteLine(growthSets.Aggregate($"Growth({itemSetCopy}): ", (a, b) => $"{a}, {b}"));
-                
-                output.AddRange(growthSets);
+                var growthSets = Growth(reducedTree, itemSetCopy, anzMin, transactions);
+                returnOutcome.AddRange(growthSets);
             }
         }
 
-        return output;
+        return returnOutcome;
     }
 
     private static List<ItemSet<TItem>> ConditionalPatternBase<TItem>(ItemSet<TItem> itemSet, List<ItemSet<TItem>> transactions)
