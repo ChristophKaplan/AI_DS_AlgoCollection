@@ -1,25 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj": {}
+    "E:\\Development\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection.csproj": {}
   },
   "projects": {
-    "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj": {
+    "E:\\Development\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj",
+        "projectUniqueName": "E:\\Development\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection.csproj",
         "projectName": "AI_DS_AlgoCollection",
-        "projectPath": "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj",
-        "packagesPath": "/Users/delphicmind/.nuget/packages/",
-        "outputPath": "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/",
+        "projectPath": "E:\\Development\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection.csproj",
+        "packagesPath": "C:\\Users\\delphicmind\\.nuget\\packages\\",
+        "outputPath": "E:\\Development\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\AI_DS_AlgoCollection\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/delphicmind/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\delphicmind\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -53,7 +56,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.316/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

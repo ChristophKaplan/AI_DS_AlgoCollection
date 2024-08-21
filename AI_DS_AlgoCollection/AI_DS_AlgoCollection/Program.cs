@@ -69,3 +69,4 @@ var examples4 = new List<bool[]> {
 var data4 = new EventData<AttributeType, bool>(types4, examples4);
 data4.DoFrequentPattern();
 data4.DoEclat();
+data4.DoApriori();

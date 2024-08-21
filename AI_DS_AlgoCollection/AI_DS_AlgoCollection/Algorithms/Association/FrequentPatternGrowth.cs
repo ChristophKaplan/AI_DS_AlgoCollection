@@ -67,7 +67,7 @@ public static class FrequentPatternGrowth {
         Console.WriteLine(tree);
         var growth = Growth(tree, new(), anzMin, itemSets);
 
-        Console.WriteLine(growth.Aggregate("growth: ", (a, b) => $"{a}, {b}"));
+        Console.WriteLine(growth.Aggregate("fp-growth: ", (a, b) => $"{a}, {b}"));
     }
 
     private static List<ItemSet<TItem>> FrequentOneItemSubsets<TItem>(List<ItemSet<TItem>> transactions, float anz_min)
@@ -112,15 +112,21 @@ public static class FrequentPatternGrowth {
         return tree;
     }
 
-    private static List<ItemSet<TItem>> Growth<TItem>(FPTree<TItem> tree, ItemSet<TItem> itemSet, int anzMin, List<ItemSet<TItem>> transactions) where TItem : IComparable {
-        var output = new List<ItemSet<TItem>>();
+    private static List<ItemSet<TItem>> Growth<TItem>(FPTree<TItem> tree, ItemSet<TItem> itemSet, int anzMin, List<ItemSet<TItem>> transactions, List<ItemSet<TItem>> output = null) where TItem : IComparable {
+        output ??= new List<ItemSet<TItem>>();
         
         if (tree.HasOnlyOnePath(out var path)) {
             var asItems = path.Where(n => n.ItemCount >= anzMin).Select(n => n.Item).ToList();
             foreach (var subset in asItems.GetPowerSet()) {
                 var set = new ItemSet<TItem>(subset.ToArray());
-                if (set.ItemList.Count > 0) output.Add(set);
+                if (set.ItemList.Count > 0)
+                {
+                    set.ItemList.AddRange(itemSet.ItemList);
+                    output.Add(set);
+                }
             }
+            
+            Console.WriteLine(asItems.Aggregate($"One Path, ({output}): ", (a, b) => $"{a}, {b}"));
         }
         else {
             var sideArrayKeys = tree.SideArray.Keys.ToList();
@@ -146,10 +152,8 @@ public static class FrequentPatternGrowth {
                     continue;
                 }
                 
-                var growthSets = Growth(reducedTree, itemSetCopy, anzMin, transactions);
-                Console.WriteLine(growthSets.Aggregate($"G({itemSetCopy}): ", (a, b) => $"{a}, {b}"));
-                //Join(growthSets, itemSetCopy);
-                //stimmt was nicht
+                var growthSets = Growth(reducedTree, itemSetCopy, anzMin, transactions, output);
+                Console.WriteLine(growthSets.Aggregate($"Growth({itemSetCopy}): ", (a, b) => $"{a}, {b}"));
                 
                 output.AddRange(growthSets);
             }

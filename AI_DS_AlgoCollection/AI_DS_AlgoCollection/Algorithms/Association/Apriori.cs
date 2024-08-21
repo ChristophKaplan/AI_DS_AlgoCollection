@@ -32,20 +32,20 @@ public class AssociationRule<TItem> where TItem : IComparable{
     }
 }
 
-public class AprioriAlgo<TItem> where TItem : IComparable {
+public static class AprioriAlgo<TItem> where TItem : IComparable {
     private readonly ItemSet<TItem> _itemBase;
     private readonly List<ItemSet<TItem>> _transactions;
     readonly float _minsupp;
     readonly float _minconf;
 
-    public AprioriAlgo(List<ItemSet<TItem> > Transactions, float minsupp, float minconf) {
+    public static AprioriAlgo(List<ItemSet<TItem> > Transactions, float minsupp, float minconf) {
         _itemBase = new ItemSet<TItem>(Transactions.AppearingItems().ToArray());
         _transactions = Transactions;
         _minconf = minconf;
         _minsupp = minsupp;
     }
 
-    private List<ItemSet<TItem> > GetMostFrequentSubsetsWithOneItem(float minsupp) {
+    private static List<ItemSet<TItem> > GetMostFrequentSubsetsWithOneItem(float minsupp) {
         var itemSet = new List<ItemSet<TItem> >();
         foreach (var item in _itemBase.ItemList) {
             var singular = new ItemSet<TItem> (item);
@@ -54,7 +54,7 @@ public class AprioriAlgo<TItem> where TItem : IComparable {
         return itemSet;
     }
 
-    public List<List<ItemSet<TItem> >> Apriori(List<ItemSet<TItem>> Transactions) {
+    public static List<List<ItemSet<TItem> >> Apriori(List<ItemSet<TItem>> Transactions) {
         var L = new List<List<ItemSet<TItem> >>();
         L.Add(GetMostFrequentSubsetsWithOneItem(_minsupp));
 
@@ -103,7 +103,7 @@ public class AprioriAlgo<TItem> where TItem : IComparable {
         return L;
     }
 
-    public List<ItemSet<TItem> > AprioriGen(List<ItemSet<TItem> > L, int preLenght) {
+    public static List<ItemSet<TItem> > AprioriGen(List<ItemSet<TItem> > L, int preLenght) {
         var newCandidates = new List<ItemSet<TItem> >();
 
         //need to be sorted ?
