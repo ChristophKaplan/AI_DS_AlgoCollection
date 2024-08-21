@@ -46,6 +46,18 @@ namespace DataMining
             return appeared;
         }
 
+        internal static List<ItemSet<TDataType>> GetFrequenTDataTypesetsCardinalityOneByMinSupp<TDataType>(this List<ItemSet<TDataType>> itemSets, float minsupp) where TDataType : IComparable
+        {
+            return itemSets.AppearingItems().Select(item => new ItemSet<TDataType>(item)).
+                Where(singular => itemSets.Support(singular) >= minsupp).ToList();
+        }
+        internal static List<ItemSet<TDataType>> GetFrequenTDataTypesetsCardinalityOneByMinNum<TDataType>(this List<ItemSet<TDataType>> itemSets, float minNum)
+            where TDataType : IComparable
+        {
+            return itemSets.AppearingItems().Select(appearingItem => new ItemSet<TDataType>(appearingItem)).
+                Where(singular => itemSets.Num(singular) >= minNum).ToList();
+        }
+        
         public static int Num<TDataType>(this List<ItemSet<TDataType>> Transactions, ItemSet<TDataType> x)
             where TDataType : IComparable
         {

@@ -45,8 +45,9 @@ var examples3 = new List<bool[]> {
 };
 
 var data3 = new EventData<AttributeType, bool>(types3, examples3);
-//data3.DoEclat();
-//data3.DoFrequentPattern();
+data3.DoEclat();
+data3.DoFrequentPattern();
+data3.DoApriori();
 //return;
 
 /*

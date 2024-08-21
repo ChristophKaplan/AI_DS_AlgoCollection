@@ -55,40 +55,27 @@ public class FPTree<TDataType> where TDataType : notnull {
 }
 
 public static class FrequentPatternGrowth {
-    public static void DoFrequentPattern<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, int minSup = 3) where TDataType : IComparable {
+    public static void DoFrequentPattern<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, int minNum = 3) where TDataType : IComparable {
         var itemSets = data.GetItemSets();
 
         //remove items that are not frequent
         foreach (var itemSet in itemSets) {
-            itemSet.ItemList = itemSet.ItemList.Where(item => itemSets.Num(item) >= minSup).ToList();
+            itemSet.ItemList = itemSet.ItemList.Where(item => itemSets.Num(item) >= minNum).ToList();
         }
         
-        var tree = BuildTree(itemSets, minSup);
-        Console.WriteLine(tree);
-        var growth = Growth(tree, new(), minSup, itemSets);
-        
+        var tree = BuildTree(itemSets, minNum);
+        //Console.WriteLine(tree);
+        var growth = Growth(tree, new(), minNum, itemSets.Select(s => s.Clone()).ToList());
         var result = new List<ItemSet<TDataType>>(growth);
-
-        var einser = FrequentOneItemSubsets(itemSets, minSup); //itemSets is 0 ??
+        var einser = itemSets.GetFrequenTDataTypesetsCardinalityOneByMinNum(minNum);
         result.AddRange(einser);
         result = result.Sorting(itemSets);
         
-        Console.WriteLine(result.Aggregate("FP: ", (current, itemSet) => current + itemSet + result.Num(itemSet) + ", "));
+        Console.WriteLine(result.Aggregate("FP: ", (current, itemSet) => current + itemSet + itemSets.Num(itemSet) + ", "));
     }
-
-    private static List<ItemSet<TDataType>> FrequentOneItemSubsets<TDataType>(List<ItemSet<TDataType>> itemSets, float anz_min)
-        where TDataType : IComparable {
-        var itemSetList = new List<ItemSet<TDataType>>();
-        foreach (var appearingItem in itemSets.AppearingItems()) {
-            var singular = new ItemSet<TDataType>(appearingItem);
-            if (itemSets.Num(singular) >= anz_min) itemSetList.Add(singular);
-        }
-        
-        return itemSetList;
-    }
-
-    private static FPTree<TDataType> BuildTree<TDataType>(List<ItemSet<TDataType>> itemSets, int minSub) where TDataType : IComparable {
-        var oneItemSets = FrequentOneItemSubsets(itemSets, minSub);
+    
+    private static FPTree<TDataType> BuildTree<TDataType>(List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable {
+        var oneItemSets = itemSets.GetFrequenTDataTypesetsCardinalityOneByMinNum(minNum);
         var sortedSets = oneItemSets.OrderByDescending(itemSets.Num);
         var tree = new FPTree<TDataType>();
 
@@ -99,7 +86,7 @@ public static class FrequentPatternGrowth {
 
         foreach (var transaction in itemSets) {
             var currentNode = tree.Root;
-            var sortedSet = transaction.ItemList.Where(i => itemSets.Num(i) >= minSub).OrderByDescending(itemSets.Num).ToList();
+            var sortedSet = transaction.ItemList.Where(i => itemSets.Num(i) >= minNum).OrderByDescending(itemSets.Num).ToList();
             
             for (var j = 0; j < sortedSet.Count; j++) {
                 if (currentNode.TryGetChild(sortedSet[j], out var child)) {
@@ -118,11 +105,11 @@ public static class FrequentPatternGrowth {
         return tree;
     }
 
-    private static List<ItemSet<TDataType>> Growth<TDataType>(FPTree<TDataType> tree, ItemSet<TDataType> itemSet, int anzMin, List<ItemSet<TDataType>> itemSets) where TDataType : IComparable {
+    private static List<ItemSet<TDataType>> Growth<TDataType>(FPTree<TDataType> tree, ItemSet<TDataType> itemSet, int minNum, List<ItemSet<TDataType>> itemSets) where TDataType : IComparable {
         var returnOutcome = new List<ItemSet<TDataType>>();
         
         if (tree.HasOnlyOnePath(out var path)) {
-            var asItems = path.Where(n => n.ItemCount >= anzMin).Select(n => n.Item).ToList();
+            var asItems = path.Where(n => n.ItemCount >= minNum).Select(n => n.Item).ToList();
             foreach (var subset in asItems.GetPowerSet()) {
                 var set = new ItemSet<TDataType>(subset.ToArray());
                 if (set.ItemList.Count > 0)
@@ -143,12 +130,12 @@ public static class FrequentPatternGrowth {
                 var itemSetCopy = new ItemSet<TDataType>(itemSet.ItemList.ToArray());
                 itemSetCopy.ItemList.Add(node.Item);
 
-                if (itemSetCopy.ItemList.Count > 1 && node.ItemCount >= anzMin) {
+                if (itemSetCopy.ItemList.Count > 1 && node.ItemCount >= minNum) {
                     returnOutcome.Add(itemSetCopy);
                 }
 
                 var condPatternBase = ConditionalPatternBase(itemSetCopy, itemSets);
-                var reducedTree = BuildTree(condPatternBase, anzMin);
+                var reducedTree = BuildTree(condPatternBase, minNum);
 
                 //Console.WriteLine(condPatternBase.Aggregate($"R({itemSetCopy}): ", (a, b) => $"{a}, {b}"));
                 //Console.WriteLine(reducedTree);
@@ -157,7 +144,7 @@ public static class FrequentPatternGrowth {
                     continue;
                 }
                 
-                var growthSets = Growth(reducedTree, itemSetCopy, anzMin, itemSets);
+                var growthSets = Growth(reducedTree, itemSetCopy, minNum, itemSets);
                 returnOutcome.AddRange(growthSets);
             }
         }
@@ -168,8 +155,8 @@ public static class FrequentPatternGrowth {
     private static List<ItemSet<TDataType>> ConditionalPatternBase<TDataType>(ItemSet<TDataType> itemSet, List<ItemSet<TDataType>> itemSets)
         where TDataType : IComparable {
         
-        var transactionContainsItemSet = itemSets.Where(trans => trans.Contains(itemSet)).ToList();
-
+        var transactionContainsItemSet = itemSets.Where(set => set.Contains(itemSet)).ToList();
+        
         for (var i = transactionContainsItemSet.Count - 1; i >= 0; i--) {
             var contains = transactionContainsItemSet[i];
             

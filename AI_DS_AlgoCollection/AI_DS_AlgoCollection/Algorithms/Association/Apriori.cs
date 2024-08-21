@@ -4,33 +4,22 @@ using DataMining;
 public static class AprioriAlgorithm {
     public static void DoApriori<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, float minSupp = 0.5f) where TDataType : IComparable
     {
-       var frequentItemSets = data.GetItemSets().Apriori(minSupp);
+       var itemSetsBase =  data.GetItemSets();
+       var frequentItemSets = itemSetsBase.Select(s => s.Clone()).ToList().Apriori(minSupp);
        var result = new List<ItemSet<TDataType>>();
        foreach (var itemSets in frequentItemSets)
        {
             result.AddRange(itemSets);   
        }
 
-       Console.WriteLine(result.Aggregate("Apriori: ", (current, itemSet) => current + itemSet + " , "));
+       result = result.Sorting(itemSetsBase);
+       Console.WriteLine(result.Aggregate("Apriori: ", (current, itemSet) => current + itemSet + itemSetsBase.Num(itemSet) + ", "));
     }
-
-    private static List<ItemSet<TDataType>> GetFrequenTDataTypesetsCardinalityOne<TDataType>(List<ItemSet<TDataType>> itemSets, float minsupp) where TDataType : IComparable
-    {
-        var itemSet = new List<ItemSet<TDataType> >();
-        foreach (var item in itemSets.AppearingItems()) {
-            var singular = new ItemSet<TDataType> (item);
-            if (itemSets.Support(singular) >= minsupp)
-            {
-                itemSet.Add(singular);
-            }
-        }
-        return itemSet;
-    }
-
+    
     internal static List<List<ItemSet<TDataType>>> Apriori<TDataType>(this List<ItemSet<TDataType>> itemSets, float minsupp) where TDataType : IComparable
     {
         var L = new List<List<ItemSet<TDataType>>>();
-        L.Add(GetFrequenTDataTypesetsCardinalityOne(itemSets, minsupp));
+        L.Add(itemSets.GetFrequenTDataTypesetsCardinalityOneByMinSupp(minsupp));
 
         var k = 2;
         while (L[k - 2].Count > 0) {

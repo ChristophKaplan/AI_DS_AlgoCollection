@@ -8,6 +8,8 @@ public class ItemSet<TDataType> where TDataType : IComparable {
         ItemList.Sort();
     }
 
+    public ItemSet<TDataType> Clone() => new (ItemList.ToArray());
+    
     public bool Contains(ItemSet<TDataType> other) => other.ItemList.All(t => ItemList.Contains(t));
     public bool Contains(TDataType other) => ItemList.Contains(other);
 
