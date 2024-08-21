@@ -143,6 +143,12 @@ public class EventData<TDataType, TDataValue> : DataTable<TDataType, TDataValue>
             itemSets.Add(new ItemSet<TDataType>(items.ToArray()));
         }
 
+        
+        foreach (var itemSet in itemSets)
+        {
+            itemSet.ItemList.Sort();
+        }
+        
         return itemSets;
     }
 }

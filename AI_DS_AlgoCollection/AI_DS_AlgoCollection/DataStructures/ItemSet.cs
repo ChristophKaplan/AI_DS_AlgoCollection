@@ -1,18 +1,18 @@
 namespace AI_DS_AlgoCollection.DataStructures;
 
-public class ItemSet<TItem> where TItem : IComparable {
-    public List<TItem> ItemList { get; set; } // need to be able to sort
+public class ItemSet<TDataType> where TDataType : IComparable {
+    public List<TDataType> ItemList { get; set; } // need to be able to sort
 
-    public ItemSet(params TItem[] items) {
-        ItemList = new List<TItem>(items);
+    public ItemSet(params TDataType[] items) {
+        ItemList = new List<TDataType>(items);
         ItemList.Sort();
     }
 
-    public bool Contains(ItemSet<TItem> other) => other.ItemList.All(t => ItemList.Contains(t));
-    public bool Contains(TItem other) => ItemList.Contains(other);
+    public bool Contains(ItemSet<TDataType> other) => other.ItemList.All(t => ItemList.Contains(t));
+    public bool Contains(TDataType other) => ItemList.Contains(other);
 
-    public List<ItemSet<TItem>> GetPossibleSubsets(int maxLength) {
-        return GetPermutations(ItemList, maxLength).Select(itemList => new ItemSet<TItem>(itemList.ToArray())).ToList();
+    public List<ItemSet<TDataType>> GetPossibleSubsets(int maxLength) {
+        return GetPermutations(ItemList, maxLength).Select(itemList => new ItemSet<TDataType>(itemList.ToArray())).ToList();
     }
     
     private IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length) where T : IComparable {
@@ -21,16 +21,16 @@ public class ItemSet<TItem> where TItem : IComparable {
             .SelectMany(t => list.Where(e => t.All(g => g.CompareTo(e) != 0)), (t1, t2) => t1.Concat(new T[] { t2 }));
     }
     
-    public static ItemSet<TItem> Union(ItemSet<TItem> a, ItemSet<TItem> b) {
-        var joinedList = new HashSet<TItem>(a.ItemList.Count + b.ItemList.Count);
+    public static ItemSet<TDataType> Union(ItemSet<TDataType> a, ItemSet<TDataType> b) {
+        var joinedList = new HashSet<TDataType>(a.ItemList.Count + b.ItemList.Count);
         joinedList.UnionWith(a.ItemList);
         joinedList.UnionWith(b.ItemList);
-        return new ItemSet<TItem>(joinedList.ToArray());
+        return new ItemSet<TDataType>(joinedList.ToArray());
     }
     
-    public static ItemSet<TItem> GetSubtract(ItemSet<TItem> a, ItemSet<TItem> b) {
-        var result = new List<TItem>(a.ItemList);
-        var removeThis = new List<TItem>();
+    public static ItemSet<TDataType> GetSubtract(ItemSet<TDataType> a, ItemSet<TDataType> b) {
+        var result = new List<TDataType>(a.ItemList);
+        var removeThis = new List<TDataType>();
         for (var i = 0; i < result.Count; i++) {
             for (var j = 0; j < b.ItemList.Count; j++) {
                 if (result[i].Equals(b.ItemList[j]) && !removeThis.Contains(result[i])) {
@@ -41,10 +41,10 @@ public class ItemSet<TItem> where TItem : IComparable {
 
         for (var i = 0; i < removeThis.Count; i++) { result.Remove(removeThis[i]); }
 
-        return new ItemSet<TItem>(result.ToArray());
+        return new ItemSet<TDataType>(result.ToArray());
     }
 
-    public static bool IsEqualUntil(ItemSet<TItem> p, ItemSet<TItem> q, int until) {
+    public static bool IsEqualUntil(ItemSet<TDataType> p, ItemSet<TDataType> q, int until) {
         for (var i = 0; i < until; i++) {
             if (!p.ItemList[i].Equals(q.ItemList[i])) {
                 return false;
@@ -55,7 +55,7 @@ public class ItemSet<TItem> where TItem : IComparable {
     }
 
     public override bool Equals(object obj) {
-        var other = (ItemSet<TItem>)obj;
+        var other = (ItemSet<TDataType>)obj;
         return Contains(other) && other.Contains(this);
     }
 
