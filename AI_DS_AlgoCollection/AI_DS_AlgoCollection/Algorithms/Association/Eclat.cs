@@ -6,10 +6,11 @@ namespace AI_DS_AlgoCollection.Algorithms.Association;
 public static class Eclat {
     public static void DoEclat<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, float minSupp = 0.5f) where TDataType : IComparable {
         var itemSets = data.GetItemSets();
-        var numItems = itemSets.AppearingItems().Count;
-        var result = EclatAlgo(itemSets.Select(s => s.Clone()).ToList(), (int) (minSupp * numItems));
         
-        var einser = itemSets.GetFrequenTDataTypesetsCardinalityOneByMinSupp(minSupp);
+        var numItems = itemSets.AppearingItems().Count;
+        var result = EclatAlgo(itemSets.Select(itemSet => itemSet.Clone()).ToList(), (int) (minSupp * numItems));
+        
+        var einser = itemSets.GetFrequentSingleItemSetsByMinSupp(minSupp);
         result.AddRange(einser);
         
         result = result.SortingBy(itemSets);

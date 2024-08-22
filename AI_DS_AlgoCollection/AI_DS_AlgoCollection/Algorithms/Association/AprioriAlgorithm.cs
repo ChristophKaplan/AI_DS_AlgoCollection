@@ -19,7 +19,7 @@ public static class AprioriAlgorithm {
     internal static List<List<ItemSet<TDataType>>> Apriori<TDataType>(this List<ItemSet<TDataType>> itemSets, float minsupp) where TDataType : IComparable
     {
         var L = new List<List<ItemSet<TDataType>>>();
-        L.Add(itemSets.GetFrequenTDataTypesetsCardinalityOneByMinSupp(minsupp));
+        L.Add(itemSets.GetFrequentSingleItemSetsByMinSupp(minsupp));
 
         var k = 2;
         while (L[k - 2].Count > 0) {

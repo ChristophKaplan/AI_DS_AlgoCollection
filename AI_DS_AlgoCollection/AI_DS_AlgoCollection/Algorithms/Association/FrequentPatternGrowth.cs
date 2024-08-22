@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using AI_DS_AlgoCollection.DataStructures;
 using DataMining;
 
@@ -88,8 +87,7 @@ public class FPTree<TDataType> where TDataType : IComparable
 
 public static class FrequentPatternGrowth
 {
-    public static void DoFrequentPattern<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data,
-        int minNum = 3) where TDataType : IComparable
+    public static void DoFrequentPattern<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, int minNum = 3) where TDataType : IComparable
     {
         var itemSets = data.GetItemSets();
 
@@ -99,55 +97,50 @@ public static class FrequentPatternGrowth
             itemSet.ItemList = itemSet.ItemList.Where(item => itemSets.Num(item) >= minNum).ToList();
         }
 
-        var tree = BuildTree(itemSets, minNum);
-        //Console.WriteLine(tree);
-
-        var growth = Growth(tree, ItemSet<TDataType>.EmptySet, minNum);
+        var fpTree = BuildFpTree(itemSets, minNum);
+        var growth = Growth(fpTree, ItemSet<TDataType>.EmptySet, minNum);
+        
         var result = new List<ItemSet<TDataType>>(growth);
-        var einser = itemSets.GetFrequenTDataTypesetsCardinalityOneByMinNum(minNum);
-        result.AddRange(einser);
+        result.AddRange(itemSets.GetFrequentSingleItemSetsByMinNum(minNum));
         result = result.SortingBy(itemSets);
 
         Console.WriteLine(result.Aggregate($"FP: \t\t", (current, itemSet) => current + itemSet + itemSets.Num(itemSet) + ", "));
     }
 
-    private static FPTree<TDataType> BuildTree<TDataType>(List<ItemSet<TDataType>> itemSets, int minNum)
-        where TDataType : IComparable
+    private static FPTree<TDataType> BuildFpTree<TDataType>(List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable
     {
-        var oneItemSets = itemSets.GetFrequenTDataTypesetsCardinalityOneByMinNum(minNum);
-        var sortedSets = oneItemSets.OrderByDescending(itemSets.Num);
-        var tree = new FPTree<TDataType>();
-
-        foreach (var itemSet in sortedSets)
+        var fpTree = new FPTree<TDataType>();
+        var sortedSingleItemSets = itemSets.GetFrequentSingleItemSetsByMinNum(minNum);
+        
+        foreach (var itemSet in sortedSingleItemSets)
         {
-            var item = itemSet.ItemList[0];
-            tree.SideArray[item] = new();
+            fpTree.SideArray.Add(itemSet.ItemList.First(), new List<FPTree<TDataType>.Node>());
         }
 
-        foreach (var transaction in itemSets)
+        foreach (var itemSet in itemSets)
         {
-            var currentNode = tree.Root;
-            var sortedSet = transaction.ItemList.Where(i => itemSets.Num(i) >= minNum).OrderByDescending(itemSets.Num)
-                .ToList();
-
-            for (var j = 0; j < sortedSet.Count; j++)
+            var currentNode = fpTree.Root;
+            var sortedItemSet = itemSet.ItemList.Where(item => itemSets.Num(item) >= minNum).OrderByDescending(itemSets.Num).ToList();
+            
+            foreach (var item in sortedItemSet)
             {
-                if (currentNode.TryGetChild(sortedSet[j], out var child))
+                if (currentNode.TryGetChild(item, out var childNode))
                 {
-                    child.ItemCount++;
+                    childNode.ItemCount++;
                 }
                 else
                 {
-                    child = new FPTree<TDataType>.Node(sortedSet[j], currentNode);
-                    currentNode.Children.Add(child);
-                    tree.SideArray[sortedSet[j]].Add(child);
+                    childNode = new FPTree<TDataType>.Node(item, currentNode);
+                    currentNode.Children.Add(childNode);
+                    fpTree.SideArray[item].Add(childNode);
                 }
 
-                currentNode = child;
+                currentNode = childNode;
             }
         }
 
-        return tree;
+        //Console.WriteLine(fpTree);
+        return fpTree;
     }
 
     private static List<ItemSet<TDataType>> Growth<TDataType>(FPTree<TDataType> tree, ItemSet<TDataType> itemSetG, int minNum) where TDataType : IComparable
@@ -172,24 +165,23 @@ public static class FrequentPatternGrowth
         }
         else
         {
-            var sideArrayKeys = tree.SideArray.Keys.ToList();
+            var sideArrayKeysReverse = tree.SideArray.Keys.Reverse().ToList();
 
-            for (var i = sideArrayKeys.Count - 1; i >= 0; i--)
+            foreach (var key in sideArrayKeysReverse)
             {
-                var node = tree.SideArray[sideArrayKeys[i]][0]; //(i,0) is lowest-first, even if its not the most "left".
-
                 var itemSetExtended = itemSetG.Clone();
+                
+                var node = tree.SideArray[key].First();
                 itemSetExtended.ItemList.Add(node.Item);
 
                 if (itemSetExtended.ItemList.Count > 1)
                 {
-                    //here we have I = {E, F}
-                    //the frequency is = node.ItemCount
+                    //here we have I = {E, F} and the frequency is node.ItemCount
                     result.Add(itemSetExtended);
                 }
 
                 var condPatternBase = ConditionalPatternBase(itemSetExtended, tree);
-                var reducedTree = BuildTree(condPatternBase, minNum);
+                var reducedTree = BuildFpTree(condPatternBase, minNum);
 
                 //Console.WriteLine(condPatternBase.Aggregate($"R({itemSetExtended}): ", (a, b) => $"{a}, {b}"));
                 //Console.WriteLine(reducedTree);
@@ -211,23 +203,18 @@ public static class FrequentPatternGrowth
         FPTree<TDataType> tree) where TDataType : IComparable
     {
         var patternBase = new List<ItemSet<TDataType>>();
-        var lowestItemlowestNodes = tree.GetLowestNodeOf(itemSetR);
-        var lowestNodes = lowestItemlowestNodes.Value;
+        var lowestNodes =  tree.GetLowestNodeOf(itemSetR).Value;
 
-        foreach (var node in lowestNodes)
+        foreach (var lowNode in lowestNodes)
         {
-            var path = node.GetPathToRoot();
+            var path = lowNode.GetPathToRoot();
             var frequentItemsWithoutFirst = path.Skip(1).Select(n => n.Item).ToArray();
             
-            if(frequentItemsWithoutFirst.Length == 0)
-            {
-                continue;
-            }
+            if(frequentItemsWithoutFirst.Length == 0) continue;
             
-            for (var i = 0; i < node.ItemCount; i++)
+            for (var i = 0; i < lowNode.ItemCount; i++)
             {
-                var itemSet = new ItemSet<TDataType>(frequentItemsWithoutFirst);
-                patternBase.Add(itemSet);
+                patternBase.Add(new ItemSet<TDataType>(frequentItemsWithoutFirst));
             }
         }
         
