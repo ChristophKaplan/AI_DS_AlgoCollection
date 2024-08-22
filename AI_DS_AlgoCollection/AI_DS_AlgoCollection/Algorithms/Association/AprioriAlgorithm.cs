@@ -12,8 +12,8 @@ public static class AprioriAlgorithm {
             result.AddRange(itemSets);   
        }
 
-       result = result.Sorting(itemSetsBase);
-       Console.WriteLine(result.Aggregate("Apriori: ", (current, itemSet) => current + itemSet + itemSetsBase.Num(itemSet) + ", "));
+       result = result.SortingBy(itemSetsBase);
+       Console.WriteLine(result.Aggregate("Apriori: \t", (current, itemSet) => current + itemSet + itemSetsBase.Num(itemSet) + ", "));
     }
     
     internal static List<List<ItemSet<TDataType>>> Apriori<TDataType>(this List<ItemSet<TDataType>> itemSets, float minsupp) where TDataType : IComparable

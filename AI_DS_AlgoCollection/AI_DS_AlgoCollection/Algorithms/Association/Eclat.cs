@@ -12,9 +12,9 @@ public static class Eclat {
         var einser = itemSets.GetFrequenTDataTypesetsCardinalityOneByMinSupp(minSupp);
         result.AddRange(einser);
         
-        result = result.Sorting(itemSets);
+        result = result.SortingBy(itemSets);
         
-        Console.WriteLine(result.Aggregate("Eclat: ", (current, itemSet) => current + itemSet + itemSets.Num(itemSet) + ", "));
+        Console.WriteLine(result.Aggregate("Eclat: \t\t", (current, itemSet) => current + itemSet + itemSets.Num(itemSet) + ", "));
     }
 
     private static List<ItemSet<TDataType>> EclatAlgo<TDataType>(List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable {

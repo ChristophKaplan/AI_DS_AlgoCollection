@@ -48,7 +48,6 @@ var data3 = new EventData<AttributeType, bool>(types3, examples3);
 data3.DoEclat();
 data3.DoFrequentPattern();
 data3.DoApriori();
-//return;
 
 /*
  T1 {A,C,D,F} T2 {B,C,D,E,F,G} T3 {A,B,C,E, F} T4 {A,B,C, F} T5 {A, F} T6 {A,C,E, F,G}

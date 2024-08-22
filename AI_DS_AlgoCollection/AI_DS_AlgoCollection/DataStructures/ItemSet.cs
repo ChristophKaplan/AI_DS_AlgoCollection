@@ -3,6 +3,8 @@ namespace AI_DS_AlgoCollection.DataStructures;
 public class ItemSet<TDataType> where TDataType : IComparable {
     public List<TDataType> ItemList { get; set; } // need to be able to sort
 
+    public static ItemSet<TDataType> EmptySet = new();
+    public bool IsEmptySet() => ItemList.Count <= 0;
     public ItemSet(params TDataType[] items) {
         ItemList = new List<TDataType>(items);
         ItemList.Sort();
@@ -12,7 +14,8 @@ public class ItemSet<TDataType> where TDataType : IComparable {
     
     public bool Contains(ItemSet<TDataType> other) => other.ItemList.All(t => ItemList.Contains(t));
     public bool Contains(TDataType other) => ItemList.Contains(other);
-
+    public bool Contains<TDataType>(TDataType other) => Contains(other);
+    
     public List<ItemSet<TDataType>> GetPossibleSubsets(int maxLength) {
         return GetPermutations(ItemList, maxLength).Select(itemList => new ItemSet<TDataType>(itemList.ToArray())).ToList();
     }

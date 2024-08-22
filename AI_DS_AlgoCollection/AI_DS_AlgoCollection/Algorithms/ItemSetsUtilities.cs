@@ -90,14 +90,14 @@ namespace DataMining
             for (var i = 0; i < 1 << n; i++) yield return input.Where((item, index) => (i & (1 << index)) != 0);
         }
 
-        public static List<ItemSet<TDataType>> Sorting<TDataType>(this List<ItemSet<TDataType>> itemSetsSub, List<ItemSet<TDataType>> itemSetsSup) where TDataType : IComparable
+        public static List<ItemSet<TDataType>> SortingBy<TDataType>(this List<ItemSet<TDataType>> itemSets, List<ItemSet<TDataType>> sortBy) where TDataType : IComparable
         {
-            foreach (var itemSet in itemSetsSub)
+            foreach (var itemSet in itemSets)
             {
-                itemSet.ItemList.Sort();
+                itemSet.ItemList = itemSet.ItemList.OrderByDescending(sortBy.Num).ToList();
             }
             
-            return itemSetsSub.OrderBy(itemSetsSup.Num).ToList();
+            return itemSets.OrderBy(sortBy.Num).ToList();
         }
     }
 }
