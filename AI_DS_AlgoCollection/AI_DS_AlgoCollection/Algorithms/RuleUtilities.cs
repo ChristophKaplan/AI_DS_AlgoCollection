@@ -4,10 +4,10 @@ namespace DataMining;
 
 public static class RuleUtilities
 {
-    public static List<(AssociationRule<TDataType>, float)> GetRulesWithConfidence<TDataType>(List<ItemSet<TDataType>> transactions, float minsupp) where TDataType : IComparable
+    public static List<(AssociationRule<TDataType>, float)> GetRulesWithConfidence<TDataType>(List<ItemSet<TDataType>> transactions, int minNum) where TDataType : IComparable
     {
-        var L = transactions.Apriori(minsupp);
-        var extractedRules = ExtractRules(L, transactions, minsupp);
+        var L = transactions.Apriori(minNum);
+        var extractedRules = ExtractRules(L, transactions, minNum);
         return extractedRules.Select(exRule => new ValueTuple<AssociationRule<TDataType>, float>(exRule, transactions.Confidence(exRule))).ToList();
     }
 
@@ -36,7 +36,7 @@ public static class RuleUtilities
     {
         if (m >= L.Count) return;
         if (L[m].Count == 0) return; //leer ?
-        currentH = currentH.AprioriGen(m - 1);
+        currentH = currentH.AprioriGen();
         allCurrentRules.AddRange(GetAllRules(L[m][n], currentH));
         RemoveConclusionAndRulesNotMatchingConf(allCurrentRules, currentH,transactions,minconf);
         for (int i = 0; i < L[m].Count; i++) { RecursiveExtraction(i, m + 1, L, currentH, allCurrentRules, transactions, minconf); }

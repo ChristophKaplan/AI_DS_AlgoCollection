@@ -4,15 +4,14 @@ using DataMining;
 namespace AI_DS_AlgoCollection.Algorithms.Association;
 
 public static class Eclat {
-    public static void DoEclat<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, float minSupp = 0.5f) where TDataType : IComparable {
+    public static void DoEclat<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, int minNum = 3) where TDataType : IComparable {
         var itemSets = data.GetItemSets();
         
-        var numItems = itemSets.AppearingItems().Count;
-        var result = EclatAlgo(itemSets.Select(itemSet => itemSet.Clone()).ToList(), (int) (minSupp * numItems));
+        //remove?
         
-        var einser = itemSets.GetFrequentSingleItemSetsByMinSupp(minSupp);
-        result.AddRange(einser);
+        var result = EclatAlgo(itemSets.Select(itemSet => itemSet.Clone()).ToList(), minNum);
         
+        result.AddRange(itemSets.GetFrequentSingleItemSetsByMinNum(minNum));
         result = result.SortingBy(itemSets);
         
         Console.WriteLine(result.Aggregate("Eclat: \t\t", (current, itemSet) => current + itemSet + itemSets.Num(itemSet) + ", "));
@@ -20,13 +19,14 @@ public static class Eclat {
 
     private static List<ItemSet<TDataType>> EclatAlgo<TDataType>(List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable {
         var frequenTDataTypeSets = new List<ItemSet<TDataType>>();
+        
         var verticalFormat = itemSets.VerticalFormat();
-        Remove(verticalFormat, minNum);
+        RemoveBelow(verticalFormat, minNum);
         var k = 1;
 
         while (verticalFormat.Keys.Count >= 2) {
             verticalFormat = JoinAll(verticalFormat, k + 1);
-            Remove(verticalFormat, minNum);
+            RemoveBelow(verticalFormat, minNum);
             frequenTDataTypeSets.AddRange(verticalFormat.Keys);
             k++;
         }
@@ -34,8 +34,11 @@ public static class Eclat {
         return frequenTDataTypeSets;
     }
     
-    private static void Remove<TDataType>(Dictionary<ItemSet<TDataType>, List<int>> vert, int minNum) where TDataType : IComparable {
-        foreach (var item in vert.Keys.Where(item => vert[item].Count < minNum)) { vert.Remove(item); }
+    private static void RemoveBelow<TDataType>(Dictionary<ItemSet<TDataType>, List<int>> verticalFormat, int minNum) where TDataType : IComparable {
+        foreach (var item in verticalFormat.Keys.Where(item => verticalFormat[item].Count < minNum))
+        {
+            verticalFormat.Remove(item);
+        }
     }
 
     private static Dictionary<ItemSet<TDataType>, List<int>> JoinAll<TDataType>(Dictionary<ItemSet<TDataType>, List<int>> verticalDictionary, int k) where TDataType : IComparable {

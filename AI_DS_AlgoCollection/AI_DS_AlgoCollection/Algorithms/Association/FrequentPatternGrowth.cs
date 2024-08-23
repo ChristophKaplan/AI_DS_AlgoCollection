@@ -91,10 +91,10 @@ public static class FrequentPatternGrowth
     {
         var itemSets = data.GetItemSets();
 
-        //remove items that are not frequent
+        //remove items that are not frequent???
         foreach (var itemSet in itemSets)
         {
-            itemSet.ItemList = itemSet.ItemList.Where(item => itemSets.Num(item) >= minNum).ToList();
+            //itemSet.ItemList = itemSet.ItemList.Where(item => itemSets.Num(item) >= minNum).ToList();
         }
 
         var fpTree = BuildFpTree(itemSets, minNum);
