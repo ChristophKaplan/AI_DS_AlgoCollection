@@ -19,7 +19,11 @@ public static class Apriori
         result = result.SortingBy(itemSetsBase);
         Console.WriteLine(result.Aggregate("Apriori: \t", (current, itemSet) => current + itemSet + itemSetsBase.Num(itemSet) + ", "));
         
-        RuleUtilities.GetRulesWithConfidence(itemSetsBase, minNum);
+        //RuleUtilities.GetRulesWithConfidence(itemSetsBase, minNum);
+        foreach (var itemSet in result)
+        {
+            RuleUtilities.CreateRulesFrom2(itemSet, 0.3f, itemSetsBase);
+        }
     }
 
     internal static List<List<ItemSet<TDataType>>> AprioriAlgo<TDataType>(this List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable

@@ -61,18 +61,52 @@ public static class RuleUtilities
     private static List<AssociationRule<TDataType>> CreateRulesFrom<TDataType>(ItemSet<TDataType>  itemSet, List<ItemSet<TDataType> > conclusions) where TDataType : IComparable
     {
         int len = itemSet.ItemList.Count;
-        var premises = itemSet.GetPossibleSubsets(len);
+        var possibleSubsets = itemSet.GetPossibleSubsets(len);
         var rules = new List<AssociationRule<TDataType>>();
         
         for (var i = 0; i < conclusions.Count; i++) {
-            for (var j = 0; j < premises.Count; j++) {
+            for (var j = 0; j < possibleSubsets.Count; j++)
+            {
+                var premise = ItemSet<TDataType>.GetSubtract(possibleSubsets[j], conclusions[i]);
+                var rule = new AssociationRule<TDataType>(premise, conclusions[i]);
                 
-                var rule = new AssociationRule<TDataType>(ItemSet<TDataType>.GetSubtract(premises[j], conclusions[i]), conclusions[i]);
+                
                 if (!rules.Contains(rule))
                 {
                     rules.Add(rule);
                 }
             }
+        }
+
+        return rules;
+    }
+
+    public static List<AssociationRule<TDataType>> CreateRulesFrom2<TDataType>(ItemSet<TDataType> itemSet, float minConf, List<ItemSet<TDataType> > transactions) where TDataType : IComparable
+    {
+        var len = itemSet.ItemList.Count;
+        var rules = new List<AssociationRule<TDataType>>();
+        var frequentItemSet = itemSet.Clone();
+        var genConclusion = itemSet.ItemList.Select(item => new ItemSet<TDataType>(item)).ToList();
+        
+        for (int i = 1; i < len; i++)
+        {
+            foreach (var conclusion in genConclusion)
+            {
+                //check if Y is always a subset of itemSet ?
+                if (!conclusion.ItemList.ToHashSet().IsSubsetOf(itemSet.ItemList.ToHashSet()))
+                {
+                    Console.WriteLine("shit"); //seems fine
+                }
+                
+                var premise = ItemSet<TDataType>.GetSubtract(frequentItemSet, conclusion);
+                var rule = new AssociationRule<TDataType>(premise, conclusion);
+                var conf = transactions.Confidence(rule);
+                if (conf < minConf) continue;
+                
+                rules.Add(rule);
+            }
+            
+            genConclusion = genConclusion.AprioriGen();
         }
 
         return rules;
