@@ -1,26 +1,28 @@
-using System.Reflection.PortableExecutable;
 using AI_DS_AlgoCollection.DataStructures;
-using DataMining;
 
-public static class AprioriAlgorithm
+namespace AI_DS_AlgoCollection.Algorithms.Association;
+
+public static class Apriori
 {
     public static void DoApriori<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data,
         int minNum = 3) where TDataType : IComparable
     {
         var itemSetsBase = data.GetItemSets();
-        var frequentItemSets = itemSetsBase.Select(itemSet => itemSet.Clone()).ToList().Apriori(minNum);
+        var aprioriResult = itemSetsBase.Select(itemSet => itemSet.Clone()).ToList().AprioriAlgo(minNum);
+        
         var result = new List<ItemSet<TDataType>>();
-        foreach (var itemSets in frequentItemSets)
+        foreach (var itemSets in aprioriResult)
         {
             result.AddRange(itemSets);
         }
 
         result = result.SortingBy(itemSetsBase);
-        Console.WriteLine(result.Aggregate("Apriori: \t",
-            (current, itemSet) => current + itemSet + itemSetsBase.Num(itemSet) + ", "));
+        Console.WriteLine(result.Aggregate("Apriori: \t", (current, itemSet) => current + itemSet + itemSetsBase.Num(itemSet) + ", "));
+        
+        RuleUtilities.GetRulesWithConfidence(itemSetsBase, minNum);
     }
 
-    internal static List<List<ItemSet<TDataType>>> Apriori<TDataType>(this List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable
+    internal static List<List<ItemSet<TDataType>>> AprioriAlgo<TDataType>(this List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable
     {
         var result = new List<List<ItemSet<TDataType>>>
         {

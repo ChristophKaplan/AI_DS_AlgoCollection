@@ -1,5 +1,4 @@
 using AI_DS_AlgoCollection.DataStructures;
-using DataMining;
 
 namespace AI_DS_AlgoCollection.Algorithms.Association;
 

@@ -1,3 +1,5 @@
+using AI_DS_AlgoCollection.Algorithms.Clustering;
+
 namespace AI_DS_AlgoCollection.DataStructures;
 
 public abstract class DataTable<TDataType, TDataValue> where TDataType : notnull {
@@ -128,6 +130,33 @@ public class ClassifictaionData<TDataType, TDataValue> : DataTable<TDataType, TD
 
 public class EventData<TDataType, TDataValue> : DataTable<TDataType, TDataValue> where TDataType : notnull, IComparable {
     public EventData(TDataType[] types, List<TDataValue[]> matrix) : base(types, matrix) {
+    }
+
+    public List<ItemSet<TDataType>> GetItemSets() {
+        var itemSets = new List<ItemSet<TDataType>>();
+
+        for (var i = 0; i < RowCount; i++) {
+            var items = new List<TDataType>();
+
+            for (var j = 0; j < ColCount; j++) {
+                if (this[j, i].Equals(true)) items.Add(Types[j]);
+            }
+
+            itemSets.Add(new ItemSet<TDataType>(items.ToArray()));
+        }
+
+        
+        foreach (var itemSet in itemSets)
+        {
+            itemSet.ItemList.Sort();
+        }
+        
+        return itemSets;
+    }
+}
+
+public class ClusterData<TDataType, TDataValue> : DataTable<TDataType, TDataValue> where TDataType : IClusterInterface, IComparable {
+    public ClusterData(TDataType[] types, List<TDataValue[]> matrix) : base(types, matrix) {
     }
 
     public List<ItemSet<TDataType>> GetItemSets() {
