@@ -1,7 +1,7 @@
 using AI_DS_AlgoCollection.Algorithms.Association;
 using AI_DS_AlgoCollection.DataStructures;
 
-namespace AI_DS_AlgoCollection.Algorithms;
+namespace AI_DS_AlgoCollection.Utilities;
 
 public static class RuleUtilities
 {

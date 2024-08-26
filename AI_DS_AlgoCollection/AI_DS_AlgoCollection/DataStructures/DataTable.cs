@@ -92,11 +92,11 @@ public class ClassifictaionData<TDataType, TDataValue> : DataTable<TDataType, TD
         var selectedExamples = new List<TDataValue[]>();
         var selectedTruthValues = new List<bool>();
         var index = Types.IndexOf(type);
-        for (var i = 0; i < RowCount; i++) {
-            if (this[index, i].Equals(value)) {
-                selectedExamples.Add(GetRow(i));
-                selectedTruthValues.Add(Classification[i]);
-            }
+        for (var i = 0; i < RowCount; i++)
+        {
+            if (!this[index, i].Equals(value)) continue;
+            selectedExamples.Add(GetRow(i));
+            selectedTruthValues.Add(Classification[i]);
         }
 
         return new ClassifictaionData<TDataType, TDataValue>(Types.ToArray(), selectedExamples, selectedTruthValues.ToArray());
@@ -144,7 +144,6 @@ public class EventData<TDataType, TDataValue> : DataTable<TDataType, TDataValue>
 
             itemSets.Add(new ItemSet<TDataType>(items.ToArray()));
         }
-
         
         foreach (var itemSet in itemSets)
         {
@@ -171,7 +170,6 @@ public class ClusterData<TDataType, TDataValue> : DataTable<TDataType, TDataValu
 
             itemSets.Add(new ItemSet<TDataType>(items.ToArray()));
         }
-
         
         foreach (var itemSet in itemSets)
         {

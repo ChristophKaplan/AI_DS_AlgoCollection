@@ -1,30 +1,31 @@
+using AI_DS_AlgoCollection.Utilities;
+
 namespace AI_DS_AlgoCollection.DataStructures;
 
 public class ItemSet<TDataType> where TDataType : IComparable {
     public List<TDataType> ItemList { get; set; } // need to be able to sort
 
-    public static ItemSet<TDataType> EmptySet = new();
+    public static readonly ItemSet<TDataType> EmptySet = new();
     public bool IsEmptySet() => ItemList.Count <= 0;
     public ItemSet(params TDataType[] items) {
         ItemList = new List<TDataType>(items);
-        ItemList.Sort();
+        //ItemList.Sort();
     }
 
     public ItemSet<TDataType> Clone() => new (ItemList.ToArray());
-    
     public bool Contains(ItemSet<TDataType> other) => other.ItemList.All(t => ItemList.Contains(t));
     public bool Contains(TDataType other) => ItemList.Contains(other);
     public bool Contains<TDataType>(TDataType other) => Contains(other);
     
     public List<ItemSet<TDataType>> GetPossibleSubsets(int maxLength) {
-        return GetPermutations(ItemList, maxLength).Select(itemList => new ItemSet<TDataType>(itemList.ToArray())).ToList();
+        return ItemList.GetPowerSet(maxLength).Select(itemList => new ItemSet<TDataType>(itemList.ToArray())).ToList();
     }
     
-    private IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length) where T : IComparable {
+    /*private IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length) where T : IComparable {
         if (length == 1) return list.Select(t => new T[] { t });
         return GetPermutations(list, length - 1)
             .SelectMany(t => list.Where(e => t.All(g => g.CompareTo(e) != 0)), (t1, t2) => t1.Concat(new T[] { t2 }));
-    }
+    }*/
     
     public static ItemSet<TDataType> Union(ItemSet<TDataType> a, ItemSet<TDataType> b) {
         var joinedList = new HashSet<TDataType>(a.ItemList.Count + b.ItemList.Count);
@@ -44,7 +45,10 @@ public class ItemSet<TDataType> where TDataType : IComparable {
             }
         }
 
-        for (var i = 0; i < removeThis.Count; i++) { result.Remove(removeThis[i]); }
+        for (var i = 0; i < removeThis.Count; i++)
+        {
+            result.Remove(removeThis[i]);
+        }
 
         return new ItemSet<TDataType>(result.ToArray());
     }
@@ -64,10 +68,8 @@ public class ItemSet<TDataType> where TDataType : IComparable {
         return Contains(other) && other.Contains(this);
     }
 
-    public override int GetHashCode() {
-        return ToString().GetHashCode();
-    }
-
+    public override int GetHashCode() => ToString().GetHashCode();
+    
     public override string ToString() {
         var s = "(";
         for (var i = 0; i < ItemList.Count-1; i++) { s += $"{ItemList[i]}, "; }

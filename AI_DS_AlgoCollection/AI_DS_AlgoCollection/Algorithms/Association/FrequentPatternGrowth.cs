@@ -1,4 +1,5 @@
 using AI_DS_AlgoCollection.DataStructures;
+using AI_DS_AlgoCollection.Utilities;
 
 namespace AI_DS_AlgoCollection.Algorithms.Association;
 
@@ -68,7 +69,7 @@ public static class FrequentPatternGrowth
         {
             var pathItems = tree.GetPathItems(minNum);
             var frequentItemSets = new List<ItemSet<TDataType>>();
-            foreach (var subset in pathItems.GetPowerSet())
+            foreach (var subset in pathItems.GetPowerSet(pathItems.Count))
             {
                 var asArray = subset.ToArray();
                 if (asArray.Length <= 0) continue;
