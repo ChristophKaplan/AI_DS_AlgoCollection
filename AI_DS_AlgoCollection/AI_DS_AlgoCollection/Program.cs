@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using AI_DS_AlgoCollection.Algorithms.Association;
+﻿using AI_DS_AlgoCollection.Algorithms.Association;
 using AI_DS_AlgoCollection.Algorithms.Clustering;
 using AI_DS_AlgoCollection.DataStructures;
 

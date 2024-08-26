@@ -4,11 +4,10 @@ namespace AI_DS_AlgoCollection.Algorithms.Association;
 
 public static class Apriori
 {
-    public static void DoApriori<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data,
-        int minNum = 3) where TDataType : IComparable
+    public static void DoApriori<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, int minNum = 3) where TDataType : IComparable
     {
-        var itemSetsBase = data.GetItemSets();
-        var aprioriResult = itemSetsBase.Select(itemSet => itemSet.Clone()).ToList().AprioriAlgo(minNum);
+        var itemSetsOrigin = data.GetItemSets();
+        var aprioriResult = itemSetsOrigin.Select(itemSet => itemSet.Clone()).ToList().AprioriAlgo(minNum);
         
         var result = new List<ItemSet<TDataType>>();
         foreach (var itemSets in aprioriResult)
@@ -16,17 +15,13 @@ public static class Apriori
             result.AddRange(itemSets);
         }
 
-        result = result.SortingBy(itemSetsBase);
-        Console.WriteLine(result.Aggregate("Apriori: \t", (current, itemSet) => current + itemSet + itemSetsBase.Num(itemSet) + ", "));
+        result = result.SortingBy(itemSetsOrigin);
         
-        //RuleUtilities.GetRulesWithConfidence(itemSetsBase, minNum);
-        foreach (var itemSet in result)
-        {
-            RuleUtilities.CreateRulesFrom2(itemSet, 0.3f, itemSetsBase);
-        }
+        Console.WriteLine(result.Aggregate("Apriori: \t", (current, itemSet) => current + itemSet + itemSetsOrigin.Num(itemSet) + ", "));
+        var b = result.CreateRulesFromItemSets(0.3f, itemSetsOrigin);
     }
 
-    internal static List<List<ItemSet<TDataType>>> AprioriAlgo<TDataType>(this List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable
+    private static List<List<ItemSet<TDataType>>> AprioriAlgo<TDataType>(this List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable
     {
         var result = new List<List<ItemSet<TDataType>>>
         {
