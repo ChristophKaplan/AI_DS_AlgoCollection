@@ -1,6 +1,6 @@
 namespace AI_DS_AlgoCollection.DataStructures;
 
-public class AssociationRule<TDataType> where TDataType : IComparable{
+public class AssociationRule<TDataType>{
     public ItemSet<TDataType> X { get; }
     public ItemSet<TDataType> Y { get; }
 

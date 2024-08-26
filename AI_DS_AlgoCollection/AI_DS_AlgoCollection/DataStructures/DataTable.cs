@@ -105,7 +105,7 @@ public class ClassifictaionData<TDataType, TDataValue> : DataTable<TDataType, TD
     public bool MajorityVal() => GetPosOrNegExamples().Count >= GetPosOrNegExamples(false).Count;
 
     public List<TDataValue[]> GetPosOrNegExamples(bool posOrNegValue = true) {
-        return Matrix.Where((example, i) => Classification[i] == posOrNegValue).ToList();
+        return Matrix.Where((_, i) => Classification[i] == posOrNegValue).ToList();
     }
 
     public bool IsSameClassificationForExamples() {
@@ -128,7 +128,7 @@ public class ClassifictaionData<TDataType, TDataValue> : DataTable<TDataType, TD
     }
 }
 
-public class EventData<TDataType, TDataValue> : DataTable<TDataType, TDataValue> where TDataType : notnull, IComparable {
+public class EventData<TDataType, TDataValue> : DataTable<TDataType, TDataValue> {
     public EventData(TDataType[] types, List<TDataValue[]> matrix) : base(types, matrix) {
     }
 
@@ -154,7 +154,7 @@ public class EventData<TDataType, TDataValue> : DataTable<TDataType, TDataValue>
     }
 }
 
-public class ClusterData<TDataType, TDataValue> : DataTable<TDataType, TDataValue> where TDataType : IClusterInterface, IComparable {
+public class ClusterData<TDataType, TDataValue> : DataTable<TDataType, TDataValue> where TDataType : IClusterInterface {
     public ClusterData(TDataType[] types, List<TDataValue[]> matrix) : base(types, matrix) {
     }
 

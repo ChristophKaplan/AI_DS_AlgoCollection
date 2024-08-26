@@ -42,7 +42,7 @@ public static class Apriori
         return result;
     }
     
-    private static Dictionary<ItemSet<TDataType>, int> FrequencyCount<TDataType>(List<ItemSet<TDataType>> itemSets, List<ItemSet<TDataType>> candidates) where TDataType : IComparable
+    private static Dictionary<ItemSet<TDataType>, int> FrequencyCount<TDataType>(List<ItemSet<TDataType>> itemSets, List<ItemSet<TDataType>> candidates) 
     {
         var frequencyCount = new Dictionary<ItemSet<TDataType>, int>();
         foreach (var itemSet in itemSets)
@@ -86,7 +86,7 @@ public static class Apriori
         return candidates;
     }
 
-    private static void SubsetCheck<TDataType>(List<ItemSet<TDataType>> itemSets, List<ItemSet<TDataType>> candidates) where TDataType : IComparable
+    private static void SubsetCheck<TDataType>(List<ItemSet<TDataType>> itemSets, List<ItemSet<TDataType>> candidates) 
     {
         foreach (var candidate in candidates.ToList())
         {
@@ -98,7 +98,7 @@ public static class Apriori
         }
     }
     
-    private static ItemSet<TDataType> KeepItemsUntilK_JoinLastTwo<TDataType>(ItemSet<TDataType> p, ItemSet<TDataType> q, int k) where TDataType : IComparable
+    private static ItemSet<TDataType> KeepItemsUntilK_JoinLastTwo<TDataType>(ItemSet<TDataType> p, ItemSet<TDataType> q, int k) 
     {
         var joined = new List<TDataType>();
         for (var i = 0; i < k; i++)

@@ -1,6 +1,6 @@
 namespace AI_DS_AlgoCollection.DataStructures;
 
-public class FPTree<TDataType> where TDataType : IComparable
+public class FPTree<TDataType>
 {
     public class Node
     {

@@ -2,14 +2,14 @@ using AI_DS_AlgoCollection.Utilities;
 
 namespace AI_DS_AlgoCollection.DataStructures;
 
-public class ItemSet<TDataType> where TDataType : IComparable {
+public class ItemSet<TDataType> {
     public List<TDataType> ItemList { get; set; } // need to be able to sort
 
     public static readonly ItemSet<TDataType> EmptySet = new();
     public bool IsEmptySet() => ItemList.Count <= 0;
     public ItemSet(params TDataType[] items) {
         ItemList = new List<TDataType>(items);
-        //ItemList.Sort();
+        ItemList.Sort();
     }
 
     public ItemSet<TDataType> Clone() => new (ItemList.ToArray());
@@ -20,12 +20,6 @@ public class ItemSet<TDataType> where TDataType : IComparable {
     public List<ItemSet<TDataType>> GetPossibleSubsets(int maxLength) {
         return ItemList.GetPowerSet(maxLength).Select(itemList => new ItemSet<TDataType>(itemList.ToArray())).ToList();
     }
-    
-    /*private IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length) where T : IComparable {
-        if (length == 1) return list.Select(t => new T[] { t });
-        return GetPermutations(list, length - 1)
-            .SelectMany(t => list.Where(e => t.All(g => g.CompareTo(e) != 0)), (t1, t2) => t1.Concat(new T[] { t2 }));
-    }*/
     
     public static ItemSet<TDataType> Union(ItemSet<TDataType> a, ItemSet<TDataType> b) {
         var joinedList = new HashSet<TDataType>(a.ItemList.Count + b.ItemList.Count);

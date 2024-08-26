@@ -4,7 +4,7 @@ using AI_DS_AlgoCollection.Utilities;
 namespace AI_DS_AlgoCollection.Algorithms.Association;
 
 public static class Eclat {
-    public static void DoEclat<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, int minNum = 3) where TDataType : IComparable {
+    public static void DoEclat<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, int minNum = 3) {
         var itemSets = data.GetItemSets();
         
         //remove?
@@ -17,7 +17,9 @@ public static class Eclat {
         Console.WriteLine(result.Aggregate("Eclat: \t\t", (current, itemSet) => current + itemSet + itemSets.Num(itemSet) + ", "));
     }
 
-    private static List<ItemSet<TDataType>> EclatAlgo<TDataType>(List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable {
+    private static List<ItemSet<TDataType>> EclatAlgo<TDataType>(List<ItemSet<TDataType>> itemSets, int minNum)  {
+        //itemSets.ForEach(itemSet => itemSet.ItemList.Sort());
+        
         var frequenTDataTypeSets = new List<ItemSet<TDataType>>();
         
         var verticalFormat = itemSets.VerticalFormat();
@@ -34,14 +36,14 @@ public static class Eclat {
         return frequenTDataTypeSets;
     }
     
-    private static void RemoveBelow<TDataType>(Dictionary<ItemSet<TDataType>, List<int>> verticalFormat, int minNum) where TDataType : IComparable {
+    private static void RemoveBelow<TDataType>(Dictionary<ItemSet<TDataType>, List<int>> verticalFormat, int minNum)  {
         foreach (var item in verticalFormat.Keys.Where(item => verticalFormat[item].Count < minNum))
         {
             verticalFormat.Remove(item);
         }
     }
 
-    private static Dictionary<ItemSet<TDataType>, List<int>> JoinAll<TDataType>(Dictionary<ItemSet<TDataType>, List<int>> verticalDictionary, int k) where TDataType : IComparable {
+    private static Dictionary<ItemSet<TDataType>, List<int>> JoinAll<TDataType>(Dictionary<ItemSet<TDataType>, List<int>> verticalDictionary, int k)  {
         var joined = new Dictionary<ItemSet<TDataType>, List<int>>();
         var itemSets = verticalDictionary.Keys.ToList();
 
@@ -51,6 +53,8 @@ public static class Eclat {
                 var itemSet2 = itemSets[j];
                 
                 var union = ItemSet<TDataType>.Union(itemSet1, itemSet2);
+                union.ItemList.Sort();
+                
                 if (union.ItemList.Count != k) {
                     continue;
                 }

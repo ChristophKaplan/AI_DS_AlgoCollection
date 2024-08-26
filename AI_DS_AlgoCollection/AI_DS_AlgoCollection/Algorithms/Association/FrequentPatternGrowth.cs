@@ -5,7 +5,7 @@ namespace AI_DS_AlgoCollection.Algorithms.Association;
 
 public static class FrequentPatternGrowth
 {
-    public static void DoFrequentPattern<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, int minNum = 3) where TDataType : IComparable
+    public static void DoFrequentPattern<TDataType, TDataValue>(this EventData<TDataType, TDataValue> data, int minNum = 3) 
     {
         var itemSets = data.GetItemSets();
 
@@ -25,7 +25,7 @@ public static class FrequentPatternGrowth
         Console.WriteLine(result.Aggregate($"FP: \t\t", (current, itemSet) => current + itemSet + itemSets.Num(itemSet) + ", "));
     }
 
-    private static FPTree<TDataType> BuildFpTree<TDataType>(List<ItemSet<TDataType>> itemSets, int minNum) where TDataType : IComparable
+    private static FPTree<TDataType> BuildFpTree<TDataType>(List<ItemSet<TDataType>> itemSets, int minNum) 
     {
         var fpTree = new FPTree<TDataType>();
         var sortedSingleItemSets = itemSets.GetFrequentSingleItemSetsByMinNum(minNum);
@@ -61,7 +61,7 @@ public static class FrequentPatternGrowth
         return fpTree;
     }
 
-    private static List<ItemSet<TDataType>> Growth<TDataType>(FPTree<TDataType> tree, ItemSet<TDataType> itemSetG, int minNum) where TDataType : IComparable
+    private static List<ItemSet<TDataType>> Growth<TDataType>(FPTree<TDataType> tree, ItemSet<TDataType> itemSetG, int minNum) 
     {
         var result = new List<ItemSet<TDataType>>();
 
@@ -117,8 +117,7 @@ public static class FrequentPatternGrowth
         return result;
     }
 
-    private static List<ItemSet<TDataType>> ConditionalPatternBase<TDataType>(ItemSet<TDataType> itemSetR,
-        FPTree<TDataType> tree) where TDataType : IComparable
+    private static List<ItemSet<TDataType>> ConditionalPatternBase<TDataType>(ItemSet<TDataType> itemSetR, FPTree<TDataType> tree) 
     {
         var patternBase = new List<ItemSet<TDataType>>();
         var lowestNodes =  tree.GetLowestNodeOf(itemSetR).Value;
