@@ -1,4 +1,6 @@
-﻿using AI_DS_AlgoCollection.Algorithms.Association;
+﻿using System.Numerics;
+using AI_DS_AlgoCollection.Algorithms.Association;
+using AI_DS_AlgoCollection.Algorithms.Classification;
 using AI_DS_AlgoCollection.Algorithms.Clustering;
 using AI_DS_AlgoCollection.DataStructures;
 
@@ -28,9 +30,9 @@ var classification = new[]
     false, false, true, false, true, false, true, true, false, false, true, true
 };
 
-//var data = new ClassifictaionData<AttributeType, string>(types, examples, classification);
-//data.GetDT();
-
+var data = new ClassifictaionData<AttributeType, string>(types, examples, classification);
+data.GetDT();
+    
 /*
  T1 {A,B,C,E, F} T2 {B,E, F} T3 {A,B,C,E} T4 {B,C,E, F} T5 {A,C,D, F} T6 {C, F}
  */
@@ -81,10 +83,12 @@ data4.DoApriori();
 
 
 float RandomRange(float min, float max) =>  (float)new Random().NextDouble() * (max - min) + min;
-var examples5 = new List<IClusterInterface>();
-for (int i = 0; i < 100; i++)
+var examples5 = new List<Vector2>();
+for (var i = 0; i < 100; i++)
 {
-    var rnd = new ClusterVector(RandomRange(0f, 10), RandomRange(0f, 10));
+    var rnd = new Vector2(RandomRange(0f, 10), RandomRange(0f, 10));
     examples5.Add(rnd);
 }
-//examples5.DoDBScan();
+
+var data5 = new ClusterData<Vector2>(examples5.ToArray(), Vector2.Distance);
+data5.DoDbScan();

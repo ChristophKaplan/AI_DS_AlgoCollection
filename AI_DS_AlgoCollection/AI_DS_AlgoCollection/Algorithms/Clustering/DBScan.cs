@@ -1,33 +1,23 @@
+using AI_DS_AlgoCollection.DataStructures;
+
 namespace AI_DS_AlgoCollection.Algorithms.Clustering;
 
-public interface IClusterInterface
-{
-    float Distance(IClusterInterface other);
-    static float Distance(IClusterInterface a, IClusterInterface b)
-    {
-        return a.Distance(b);
-    }
-    IClusterInterface Add(IClusterInterface other);
-    IClusterInterface Divide(int n);
-}
-
-public static class DBScan
+public static class DbScan
 {
     const string Undefined = "Undefined";
     const string Noise = "Noise";
     
-    public static void DoDBScan(this List<IClusterInterface> data)
+    public static void DoDbScan<TDataValue>(this ClusterData<TDataValue> data)
     {
-        var result = DBScanAlgorithm(data, 3 , 1.0f);
+        var result = DbScanAlgorithm(data.Data, 3 , 1.0f, data.DistanceFunc);
         result.GroupBy(res => res.Value).ToList().ForEach(group =>
         {
             Console.WriteLine($"Cluster {group.Key}");
-            
             group.ToList().ForEach(y => Console.WriteLine(y.Key));
         });
     }
     
-    private static Dictionary<IClusterInterface, string> DBScanAlgorithm(List<IClusterInterface> data, int minPts, float epsilon)
+    private static Dictionary<TDataValue, string> DbScanAlgorithm<TDataValue>(List<TDataValue> data, int minPts, float epsilon, Func<TDataValue, TDataValue, float> distanceFunc)
     {
         var id = 0;
         var result = data.ToDictionary(dataPoint => dataPoint, _ => Undefined);
@@ -36,10 +26,9 @@ public static class DBScan
         {
             if (result[dataPoint] == Undefined)
             {
-                var epsNeighborhood = RangeQuery(dataPoint, data, epsilon);
+                var epsNeighborhood = RangeQuery(dataPoint, data, epsilon, distanceFunc);
                 if (epsNeighborhood.Count < minPts)
                 {
-                    //not core point
                     result[dataPoint] = Noise;
                 }
                 else
@@ -48,7 +37,7 @@ public static class DBScan
                     result[dataPoint] = id.ToString(); //core point
 
                     //expansion
-                    var set = new List<IClusterInterface>(epsNeighborhood);
+                    var set = new List<TDataValue>(epsNeighborhood);
                     set.Remove(dataPoint);
 
                     for (var i = 0; i < set.Count; i++)
@@ -61,7 +50,7 @@ public static class DBScan
 
                         if (result[current] != Undefined) continue;
                         
-                        epsNeighborhood = RangeQuery(current, data, epsilon);
+                        epsNeighborhood = RangeQuery(current, data, epsilon, distanceFunc);
                         result[current] = id.ToString();
                         if (epsNeighborhood.Count >= minPts)
                         {
@@ -75,8 +64,8 @@ public static class DBScan
         return result;
     }
     
-    private static List<IClusterInterface> RangeQuery(IClusterInterface dataPoint, List<IClusterInterface> data, float epsilon)
+    private static List<TDataValue> RangeQuery<TDataValue>(TDataValue dataPoint, List<TDataValue> data, float epsilon, Func<TDataValue, TDataValue, float> distanceFunc)
     {
-        return data.Where(point => IClusterInterface.Distance(dataPoint, point) <= epsilon).ToList();
+        return data.Where(point => distanceFunc(dataPoint, point) <= epsilon).ToList();
     }
 }

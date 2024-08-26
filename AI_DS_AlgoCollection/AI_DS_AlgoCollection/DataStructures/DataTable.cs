@@ -1,41 +1,51 @@
-using AI_DS_AlgoCollection.Algorithms.Clustering;
 
 namespace AI_DS_AlgoCollection.DataStructures;
 
-public abstract class DataTable<TDataType, TDataValue> where TDataType : notnull {
-    public int ColCount { get; }
+public abstract class DataMatrix<TDataValue>
+{
     public int RowCount => Matrix.Count;
-
+    public int ColCount => Matrix.First().Length;
+    
     protected readonly List<TDataValue[]> Matrix = new();
-    public readonly List<TDataType> Types = new();
-
-    protected DataTable(TDataType[] types, List<TDataValue[]> matrix) {
-        ColCount = types.Length;
-        Types.AddRange(types);
+    
+    protected DataMatrix(List<TDataValue[]> matrix) {
         Matrix = matrix;
     }
-
+    
+    protected DataMatrix(TDataValue[] singularArray) {
+        AddRow(singularArray);
+    }
+    
     public TDataValue this[int x, int y] {
         get => Matrix[y][x];
         set => Matrix[y][x] = value;
     }
 
     public TDataValue[] GetRow(int index) => Matrix[index];
-
     public IEnumerable<TDataValue> GetColumn(int index) => Matrix.Select(row => row[index]);
-
-    public TDataType GetColumnType(int index) => Types[index];
-
     public void AddRow(params TDataValue[] row) {
         Matrix.Add(row);
     }
 
-    public void AddColumn(TDataType type, params TDataValue[] column) {
-        Types.Add(type);
+    public void AddColumn(params TDataValue[] column) {
         for (int i = 0; i < column.Length; i++) {
             if (i >= Matrix.Count) Matrix.Add(new TDataValue[ColCount]);
             Matrix[i][ColCount - 1] = column[i];
         }
+    }
+}
+
+public abstract class DataTable<TDataType, TDataValue> : DataMatrix<TDataValue>{
+    public readonly List<TDataType> Types = new();
+    public TDataType GetColumnType(int index) => Types[index];
+
+    protected DataTable(TDataType[] types, List<TDataValue[]> matrix) : base(matrix){
+        Types.AddRange(types);
+    }
+    
+    public void AddColumn(TDataType type, params TDataValue[] column) {
+        Types.Add(type);
+        base.AddColumn(column);
     }
 
     public List<TDataValue> PossibleValuesForType(TDataType type) {
@@ -154,28 +164,14 @@ public class EventData<TDataType, TDataValue> : DataTable<TDataType, TDataValue>
     }
 }
 
-public class ClusterData<TDataType, TDataValue> : DataTable<TDataType, TDataValue> where TDataType : IClusterInterface {
-    public ClusterData(TDataType[] types, List<TDataValue[]> matrix) : base(types, matrix) {
+public class ClusterData<TDataValue> : DataMatrix<TDataValue> {
+
+   public Func<TDataValue, TDataValue, float> DistanceFunc { get; }
+
+    public ClusterData(TDataValue[] dataPoints, Func<TDataValue, TDataValue, float> distanceFunc) : base(dataPoints)
+    {
+        DistanceFunc = distanceFunc;
     }
-
-    public List<ItemSet<TDataType>> GetItemSets() {
-        var itemSets = new List<ItemSet<TDataType>>();
-
-        for (var i = 0; i < RowCount; i++) {
-            var items = new List<TDataType>();
-
-            for (var j = 0; j < ColCount; j++) {
-                if (this[j, i].Equals(true)) items.Add(Types[j]);
-            }
-
-            itemSets.Add(new ItemSet<TDataType>(items.ToArray()));
-        }
-        
-        foreach (var itemSet in itemSets)
-        {
-            itemSet.ItemList.Sort();
-        }
-        
-        return itemSets;
-    }
+    public List<TDataValue> Data => Matrix.First().ToList();
+    
 }
