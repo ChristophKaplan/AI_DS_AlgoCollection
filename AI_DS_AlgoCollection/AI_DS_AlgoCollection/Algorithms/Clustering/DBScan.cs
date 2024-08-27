@@ -7,9 +7,9 @@ public static class DbScan
     const string Undefined = "Undefined";
     const string Noise = "Noise";
     
-    public static void DoDbScan<TDataValue>(this ClusterData<TDataValue> data)
+    public static void DoDbScan<TDataValue>(this ClusterData<TDataValue> data,  int minPts = 3, float epsilon = 1.0f)
     {
-        var result = DbScanAlgorithm(data.Data, 3 , 1.0f, data.DistanceFunc);
+        var result = DbScanAlgorithm(data.Data, minPts, epsilon, data.DistanceFunc);
         result.GroupBy(res => res.Value).ToList().ForEach(group =>
         {
             Console.WriteLine($"Cluster {group.Key}");
