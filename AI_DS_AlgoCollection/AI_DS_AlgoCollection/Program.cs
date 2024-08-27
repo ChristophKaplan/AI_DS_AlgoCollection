@@ -32,7 +32,7 @@ var classification = new[]
 
 var data = new ClassifictaionData<AttributeType, string>(types, examples, classification);
 data.GetDT();
-    
+
 /*
  T1 {A,B,C,E, F} T2 {B,E, F} T3 {A,B,C,E} T4 {B,C,E, F} T5 {A,C,D, F} T6 {C, F}
  */
@@ -82,7 +82,11 @@ data4.DoEclat();
 data4.DoApriori();
 
 
-float RandomRange(float min, float max) =>  (float)new Random().NextDouble() * (max - min) + min;
+float RandomRange(float min, float max)
+{
+    return (float)new Random().NextDouble() * (max - min) + min;
+}
+
 var examples5 = new List<Vector2>();
 for (var i = 0; i < 100; i++)
 {
