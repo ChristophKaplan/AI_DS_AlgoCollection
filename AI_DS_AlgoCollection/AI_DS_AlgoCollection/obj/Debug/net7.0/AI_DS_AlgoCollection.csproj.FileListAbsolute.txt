@@ -1,4 +1,3 @@
-/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.csproj.AssemblyReference.cache
 /Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.GeneratedMSBuildEditorConfig.editorconfig
 /Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.AssemblyInfoInputs.cache
 /Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.AssemblyInfo.cs
@@ -42,3 +41,4 @@ E:/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/ob
 /Users/christoph.kaplan/development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.pdb
 /Users/christoph.kaplan/development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.genruntimeconfig.cache
 /Users/christoph.kaplan/development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/ref/AI_DS_AlgoCollection.dll
+/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/Debug/net7.0/AI_DS_AlgoCollection.sourcelink.json

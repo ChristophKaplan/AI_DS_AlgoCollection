@@ -1,26 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "/Users/christoph.kaplan/development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj": {}
+    "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj": {}
   },
   "projects": {
-    "/Users/christoph.kaplan/development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj": {
+    "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/christoph.kaplan/development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj",
+        "projectUniqueName": "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj",
         "projectName": "AI_DS_AlgoCollection",
-        "projectPath": "/Users/christoph.kaplan/development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj",
-        "packagesPath": "/Users/christoph.kaplan/.nuget/packages/",
-        "outputPath": "/Users/christoph.kaplan/development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/",
+        "projectPath": "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection.csproj",
+        "packagesPath": "/Users/delphicmind/.nuget/packages/",
+        "outputPath": "/Volumes/Data/Development/AI_DS_AlgoCollection/AI_DS_AlgoCollection/AI_DS_AlgoCollection/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/christoph.kaplan/.nuget/NuGet/NuGet.Config"
+          "/Users/delphicmind/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.pkg.github.com/ChristophKaplan/index.json": {}
         },
         "frameworks": {
           "net7.0": {
@@ -32,7 +33,13 @@
           "warnAsError": [
             "NU1605"
           ]
-        }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net7.0": {
@@ -53,7 +60,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/Users/christoph.kaplan/.dotnet/sdk/7.0.101/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/RuntimeIdentifierGraph.json"
         }
       }
     }
